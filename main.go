@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -16,11 +17,22 @@ import (
 )
 
 func main() {
+	var hostname, err = os.Hostname()
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "When getting hostname"))
+	}
+	var usr *user.User
+	usr, err = user.Current()
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "When getting username"))
+	}
+
+	fmt.Fprintf(os.Stdout, "%s@%s> ", usr.Username, hostname)
 	var scanner = bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		var line = scanner.Text()
 		handleLine(line)
-		os.Stdin.WriteString("> ")
+		fmt.Fprintf(os.Stdout, "%s@%s> ", usr.Username, hostname)
 	}
 	if scanner.Err() != nil {
 		log.Fatal(errors.Wrap(scanner.Err(), "When scanning input"))
