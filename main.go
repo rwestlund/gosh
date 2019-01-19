@@ -27,16 +27,24 @@ func main() {
 		log.Fatal(errors.Wrap(err, "When getting username"))
 	}
 
-	fmt.Fprintf(os.Stdout, "%s@%s> ", usr.Username, hostname)
+	printPrompt(usr.Username, hostname)
 	var scanner = bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		var line = scanner.Text()
 		handleLine(line)
-		fmt.Fprintf(os.Stdout, "%s@%s> ", usr.Username, hostname)
+		printPrompt(usr.Username, hostname)
 	}
 	if scanner.Err() != nil {
 		log.Fatal(errors.Wrap(scanner.Err(), "When scanning input"))
 	}
+}
+
+func printPrompt(username, hostname string) {
+	var cwd, err = os.Getwd()
+	if err != nil {
+		log.Println(errors.Wrap(err, "When getting cwd"))
+	}
+	fmt.Fprintf(os.Stdout, "%s@%s %s> ", username, hostname, cwd)
 }
 
 func handleLine(line string) {
