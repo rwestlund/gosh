@@ -19,5 +19,7 @@ func cd(args []string) {
 	}
 	if err != nil {
 		log.Println(errors.Wrap(err, "When changing dir"))
+	} else {
+		updateCwd()
 	}
 }

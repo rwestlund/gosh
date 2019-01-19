@@ -35,6 +35,11 @@ func handleLine(line string) {
 }
 
 func findBinary(name string) string {
+	if strings.HasPrefix(name, "/") {
+		return name
+	} else if strings.HasPrefix(name, ".") {
+		return filepath.Join(env.cwd, name)
+	}
 	var path = os.Getenv("PATH")
 	var parts = strings.Split(path, ":")
 	for _, dir := range parts {

@@ -18,6 +18,7 @@ import (
 var env struct {
 	usr      *user.User
 	hostname string
+	cwd      string
 }
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "When getting username"))
 	}
+	updateCwd()
 
 	printPrompt()
 	var scanner = bufio.NewScanner(os.Stdin)
@@ -43,12 +45,15 @@ func main() {
 	}
 }
 
-func printPrompt() {
-	var cwd, err = os.Getwd()
+func updateCwd() {
+	var err error
+	env.cwd, err = os.Getwd()
 	if err != nil {
 		log.Println(errors.Wrap(err, "When getting cwd"))
 	}
-	cwd = abbreviatePath(cwd)
+}
+func printPrompt() {
+	var cwd = abbreviatePath(env.cwd)
 	fmt.Fprintf(os.Stdout, "%s@%s %s> ", env.usr.Username, env.hostname, cwd)
 }
 
