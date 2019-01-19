@@ -63,6 +63,7 @@ func runBinary(bin string, args []string) {
 	var cmd = exec.Command(bin, args...)
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
 	var err = cmd.Run()
 	if err != nil {
 		fmt.Println(errors.Wrap(err, "When running binary"))
